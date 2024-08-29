@@ -14,7 +14,7 @@ import java.io.Serializable;
  * Dto class for Item to use in PATCH-requests
  */
 @Data
-@FieldDefaults(level= AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 public class ItemUpdateDto implements Serializable {
 

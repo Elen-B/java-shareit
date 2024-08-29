@@ -15,7 +15,7 @@ import java.io.Serializable;
  */
 
 @Data
-@FieldDefaults(level= AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemDto implements Serializable {

@@ -12,7 +12,7 @@ import org.openapitools.jackson.nullable.JsonNullable;
  * Dto class for User to use in PATCH-requests
  */
 @Data
-@FieldDefaults(level= AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 public class UserUpdateDto {
     JsonNullable<@NotBlank String> name = JsonNullable.undefined();

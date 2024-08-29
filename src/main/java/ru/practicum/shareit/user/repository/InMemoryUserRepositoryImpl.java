@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @Slf4j
 @Repository
-public class InMemoryUserRepositoryImpl implements UserRepository{
+public class InMemoryUserRepositoryImpl implements UserRepository {
     private final Map<Long, User> users = new HashMap<>();
     private static Integer globalId = 0;
 

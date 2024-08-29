@@ -15,13 +15,13 @@ import ru.practicum.shareit.user.repository.UserRepository;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public User getById(Long UserId) {
-        return userRepository.getById(UserId).orElseThrow(() -> new NotFoundException(
-                String.format("Пользователь с ид %s не найден", UserId))
+    public User getById(Long userId) {
+        return userRepository.getById(userId).orElseThrow(() -> new NotFoundException(
+                String.format("Пользователь с ид %s не найден", userId))
         );
     }
 

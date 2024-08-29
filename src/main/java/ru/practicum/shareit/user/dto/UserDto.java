@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
  */
 
 @Data
-@FieldDefaults(level= AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {

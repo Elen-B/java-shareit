@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
  */
 
 @Data
-@FieldDefaults(level= AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
     Long id;
     @NotBlank

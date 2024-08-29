@@ -4,7 +4,7 @@ import ru.practicum.shareit.user.model.User;
 
 public interface UserService {
 
-    User getById(Long UserId);
+    User getById(Long userId);
 
     User add(User user);
 
