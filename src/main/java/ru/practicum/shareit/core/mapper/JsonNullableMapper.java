@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item.mapper;
+package ru.practicum.shareit.core.mapper;
 
 import org.mapstruct.Mapper;
 import org.openapitools.jackson.nullable.JsonNullable;

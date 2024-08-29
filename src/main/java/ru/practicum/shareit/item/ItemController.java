@@ -25,7 +25,6 @@ public class ItemController {
 
     @GetMapping("/{itemId}")
     public ItemDto getById(@PathVariable(name = "itemId") Long itemId) {
-        System.out.println("getById itemId = " + itemId);
         Item result = itemService.getById(itemId);
         return itemMapper.map(result);
     }
@@ -42,8 +41,6 @@ public class ItemController {
     @ResponseStatus(HttpStatus.CREATED)
     public ItemDto add(@RequestHeader("X-Sharer-User-Id") Long userId,
                        @Valid @RequestBody ItemDto item) {
-        System.out.println("ItemDto = " + item);
-        System.out.println("userId = " + userId);
         Item result = itemService.add(itemMapper.map(item, userId));
         return itemMapper.map(result);
     }
@@ -52,7 +49,6 @@ public class ItemController {
     public ItemDto update(@RequestHeader("X-Sharer-User-Id") Long userId,
                           @PathVariable(name = "itemId") Long itemId,
                           @Valid @RequestBody ItemUpdateDto item) {
-        System.out.println("item = " + item);
         Item result = itemService.update(itemMapper.map(item, itemId, userId));
         return itemMapper.map(result);
     }

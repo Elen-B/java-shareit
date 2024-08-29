@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 /**
- * TODO Sprint add-controllers.
+ * describes users who own, book and request items
  */
 
 @Data

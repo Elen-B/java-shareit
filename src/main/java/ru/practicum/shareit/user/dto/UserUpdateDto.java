@@ -1,27 +1,21 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.user.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.openapitools.jackson.nullable.JsonNullable;
 
-import java.io.Serializable;
-
 /**
- * Dto class for Item to use in PATCH-requests
+ * Dto class for User to use in PATCH-requests
  */
 @Data
 @FieldDefaults(level= AccessLevel.PRIVATE)
 @NoArgsConstructor
-public class ItemUpdateDto implements Serializable {
-
+public class UserUpdateDto {
     JsonNullable<@NotBlank String> name = JsonNullable.undefined();
 
-    JsonNullable<@NotBlank String> description = JsonNullable.undefined();
-
-    JsonNullable<@NotNull Boolean> available = JsonNullable.undefined();
-
+    JsonNullable<@NotBlank @Email String> email = JsonNullable.undefined();
 }

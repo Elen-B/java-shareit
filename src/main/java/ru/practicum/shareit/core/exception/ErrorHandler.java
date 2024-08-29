@@ -34,7 +34,7 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ErrorResponse handleConditionsNotMetException(final ConditionsNotMetException e) {
-        //log.error("handleConditionsNotMetException: {}", e.getMessage());
+        log.error("handleConditionsNotMetException: {}", e.getMessage());
         return new ErrorResponse(
                 e.getMessage()
         );
@@ -43,7 +43,16 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleWrongArgumentException(final WrongArgumentException e) {
-        //log.error("handleWrongArgumentException: {}", e.getMessage());
+        log.error("handleWrongArgumentException: {}", e.getMessage());
+        return new ErrorResponse(
+                e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleDataConflictException(final DataConflictException e) {
+        log.error("handleDataConflictException: {}", e.getMessage());
         return new ErrorResponse(
                 e.getMessage()
         );

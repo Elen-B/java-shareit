@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.core.exception.*;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.user.service.UserService;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -18,9 +19,11 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService{
     private final ItemRepository itemRepository;
+    private final UserService userService;
 
     @Override
     public Item add(Item item) {
+        checkItem(item);
         return itemRepository.add(item).orElseThrow(() -> new InternalServerException(
                 "Ошибка создания позиции"));
     }
@@ -45,7 +48,7 @@ public class ItemServiceImpl implements ItemService{
             oldItem.setAvailable(item.getAvailable());
         }
         return itemRepository.update(oldItem).orElseThrow(() -> new InternalServerException(
-                "Ошибка создания позиции"));
+                "Ошибка обновления позиции"));
     }
 
     @Override
@@ -63,5 +66,9 @@ public class ItemServiceImpl implements ItemService{
     @Override
     public Collection<Item> search(String text) {
         return itemRepository.search(text);
+    }
+
+    private void checkItem(Item item) {
+        userService.getById(item.getOwnerId());
     }
 }

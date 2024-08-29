@@ -30,17 +30,12 @@ public class InMemoryItemRepositoryImpl implements ItemRepository {
             oldItem.setAvailable(item.getAvailable());
             return Optional.of(oldItem);
         }
-        //throw new NotFoundException(String.format("Фильм с id = %d не найден", film.getId()));
         return Optional.empty();
     }
 
     @Override
     public Optional<Item> getById(Long itemId) {
-        Item item = items.get(itemId);
-        if (item == null) {
-            return Optional.empty();
-        }
-        return  Optional.of(item);
+        return Optional.ofNullable(items.get(itemId));
     }
 
     @Override

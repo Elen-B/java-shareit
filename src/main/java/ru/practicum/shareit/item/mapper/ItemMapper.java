@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.mapper;
 
 import org.mapstruct.*;
+import ru.practicum.shareit.core.mapper.JsonNullableMapper;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 import ru.practicum.shareit.item.model.Item;
