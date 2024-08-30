@@ -1,9 +1,6 @@
 package ru.practicum.shareit.user.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 import ru.practicum.shareit.core.mapper.JsonNullableMapper;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserUpdateDto;
@@ -26,6 +23,9 @@ public interface UserMapper {
 
     UserDto map(User entity);
 
+//    @Mapping(target = "id", source = "userId")
+//    User map(UserUpdateDto entity, Long userId);
+
     @Mapping(target = "id", source = "userId")
-    User map(UserUpdateDto entity, Long userId);
+    void update(UserUpdateDto update, Long userId, @MappingTarget User destination);
 }

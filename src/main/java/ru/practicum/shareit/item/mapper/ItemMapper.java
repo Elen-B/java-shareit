@@ -23,8 +23,5 @@ public interface ItemMapper {
 
     @Mapping(target = "id", source = "itemId")
     @Mapping(target = "ownerId", source = "userId")
-    Item map(ItemUpdateDto entity, Long itemId, Long userId);
-
-    @InheritConfiguration
-    void update(ItemUpdateDto update, @MappingTarget Item destination);
+    void update(ItemUpdateDto update, Long itemId, Long userId, @MappingTarget Item destination);
 }

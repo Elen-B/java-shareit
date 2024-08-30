@@ -4,12 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.core.exception.*;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemUpdateDto;
+import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.Collection;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of ItemService that implement operations with items using ItemRepository
@@ -20,55 +24,63 @@ import java.util.Objects;
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserService userService;
+    private final ItemMapper itemMapper;
 
     @Override
-    public Item add(Item item) {
+    public ItemDto add(ItemDto itemDto, Long userId) {
+        Item item = itemMapper.map(itemDto, userId);
         checkItem(item);
-        return itemRepository.add(item).orElseThrow(() -> new InternalServerException(
+        item = itemRepository.add(item).orElseThrow(() -> new InternalServerException(
                 "Ошибка создания позиции"));
+        return itemMapper.map(item);
     }
 
     @Override
-    public Item update(Item item) {
-        log.error(item.toString());
-        if (item.getId() == null) {
+    public ItemDto update(ItemUpdateDto itemUpdateDto, Long itemId, Long userId) {
+        log.info("ItemServiceImpl/update args: {}, {}, {}", itemUpdateDto, itemId, userId);
+        if (itemId == null) {
             throw new ConditionsNotMetException("Id позиции должен быть указан");
         }
-        Item oldItem = getById(item.getId());
-        if (!Objects.equals(item.getOwnerId(), oldItem.getOwnerId())) {
+        Item oldItem = getItemById(itemId);
+        if (!Objects.equals(userId, oldItem.getOwnerId())) {
             throw new AccessException("Обновлять позицию может только владелец");
         }
-        if (item.getName() != null) {
-            oldItem.setName(item.getName());
-        }
-        if (item.getDescription() != null) {
-            oldItem.setDescription(item.getDescription());
-        }
-        if (item.getAvailable() != null) {
-            oldItem.setAvailable(item.getAvailable());
-        }
-        return itemRepository.update(oldItem).orElseThrow(() -> new InternalServerException(
+        itemMapper.update(itemUpdateDto, itemId, userId, oldItem);
+        log.info("ItemServiceImpl/update map update: {}", oldItem);
+        oldItem = itemRepository.update(oldItem).orElseThrow(() -> new InternalServerException(
                 "Ошибка обновления позиции"));
+        log.info("ItemServiceImpl/update result: {}", oldItem);
+        return itemMapper.map(oldItem);
     }
 
     @Override
-    public Item getById(Long itemId) {
-        return itemRepository.getById(itemId).orElseThrow(() -> new NotFoundException(
-                String.format("Позиция с ид %s не найдена", itemId))
-        );
+    public ItemDto getById(Long itemId) {
+        return itemMapper.map(getItemById(itemId));
     }
 
     @Override
-    public Collection<Item> getByOwnerId(Long ownerId) {
-        return itemRepository.getByOwnerId(ownerId);
+    public Collection<ItemDto> getByOwnerId(Long ownerId) {
+        Collection<Item> items = itemRepository.getByOwnerId(ownerId);
+        return items.stream()
+                .map(itemMapper::map)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Collection<Item> search(String text) {
-        return itemRepository.search(text);
+    public Collection<ItemDto> search(String text) {
+        Collection<Item> items = itemRepository.search(text);
+        return items.stream()
+                .map(itemMapper::map)
+                .collect(Collectors.toList());
     }
 
     private void checkItem(Item item) {
         userService.getById(item.getOwnerId());
+    }
+
+    private Item getItemById(Long itemId) {
+        return itemRepository.getById(itemId).orElseThrow(() -> new NotFoundException(
+                String.format("Позиция с ид %s не найдена", itemId))
+        );
     }
 }
