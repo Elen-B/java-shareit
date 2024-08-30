@@ -67,12 +67,11 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     }
 
     private Boolean isEmailExist(String email, Long userId) {
-        if (email == null) {
-            return false;
-        }
-        return users.values()
-                .stream()
-                .filter(user -> !Objects.equals(user.getId(), userId))
-                .anyMatch(user -> user.getEmail().equalsIgnoreCase(email));
+        return Optional.ofNullable(email)
+                .map(emailValue -> users.values()
+                        .stream()
+                        .filter(user -> !Objects.equals(user.getId(), userId))
+                        .anyMatch(user -> user.getEmail().equalsIgnoreCase(emailValue)))
+                .orElse(false);
     }
 }
