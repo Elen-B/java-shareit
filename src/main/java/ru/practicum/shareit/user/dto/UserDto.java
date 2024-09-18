@@ -1,30 +1,26 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.user.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.io.Serializable;
-
 /**
- * Dto class for Item
+ * Dto class for User
  */
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemDto implements Serializable {
+public class UserDto {
     Long id;
     @NotBlank
     String name;
     @NotBlank
-    String description;
-    @NotNull
-    Boolean available;
-    Long requestId;
+    @Email
+    String email;
 }
