@@ -5,13 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.BookingDates;
+import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.core.exception.*;
-import ru.practicum.shareit.item.dto.ItemDatesDto;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemUpdateDto;
+import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.mapper.ItemMapper;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
@@ -34,6 +35,7 @@ public class ItemServiceImpl implements ItemService {
     private final UserService userService;
     private final ItemMapper itemMapper;
     private final BookingRepository bookingRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     @Transactional
@@ -68,6 +70,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public ItemDatesDto getItemDateDtoById(Long itemId) {
+        Item item = getItemById(itemId);
+        Collection<CommentResponseDto> comments = commentRepository.findByItemId(itemId)
+                .stream()
+                .map(itemMapper::map)
+                .toList();
+
+        return itemMapper.map(item, null, null, comments);
+    }
+
+    @Override
     public Collection<ItemDatesDto> getByOwnerId(Long ownerId) {
         HashMap<Long, BookingDates> lastBookings = new HashMap<>();
         for (BookingDates dates : bookingRepository.lastBookings(LocalDateTime.now(), ownerId)) {
@@ -80,10 +93,22 @@ public class ItemServiceImpl implements ItemService {
         }
 
         Collection<Item> items = itemRepository.findByOwnerId(ownerId);
+
+        Collection<Comment> comments = commentRepository.findByItemIdIn(items.stream().map(Item::getId).collect(Collectors.toList()));
+        HashMap<Long, Collection<CommentResponseDto>> mapComments = new HashMap<>();
+        for (Item item: items) {
+            mapComments.put(item.getId(),
+                    comments.stream()
+                            .filter(comment -> Objects.equals(comment.getItem().getId(), item.getId()))
+                            .map(itemMapper::map)
+                            .collect(Collectors.toList()));
+        }
+
         return items.stream().map(item -> itemMapper.map(
                         item,
                         itemMapper.map(lastBookings.get(item.getId())),
-                        itemMapper.map(nextBookings.get(item.getId()))))
+                        itemMapper.map(nextBookings.get(item.getId())),
+                        mapComments.get(item.getId())))
                 .collect(Collectors.toList());
     }
 
@@ -96,5 +121,18 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Item getItemById(Long itemId) {
         return itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException(String.format("Позиция с ид %s не найдена", itemId)));
+    }
+
+    @Override
+    @Transactional
+    public CommentResponseDto addComment(Long itemId, Long authorId, CommentRequestDto commentDto) {
+        ItemDto item = getById(itemId);
+        UserDto author = userService.getById(authorId);
+        if (bookingRepository.findByItemIdAndBookerIdAndEndDateBeforeAndStatus(itemId, authorId, LocalDateTime.now(), BookingStatus.APPROVED).isEmpty()) {
+            throw new WrongArgumentException("Не найдено успешное бронирование позиции");
+        }
+
+        Comment comment = commentRepository.save(itemMapper.map(commentDto, item, author, LocalDateTime.now()));
+        return itemMapper.map(comment);
     }
 }
