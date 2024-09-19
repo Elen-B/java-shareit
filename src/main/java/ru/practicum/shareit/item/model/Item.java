@@ -3,7 +3,9 @@ package ru.practicum.shareit.item.model;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.user.model.User;
 
 /**
  * describes items to book
@@ -21,8 +23,10 @@ public class Item {
     String name;
     String description;
     Boolean available;
-    @Column(name = "owner_id")
-    Long ownerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JoinColumn(name = "owner_id")
+    User owner;
     @Column(name = "request_id")
     Long requestId;
 }
