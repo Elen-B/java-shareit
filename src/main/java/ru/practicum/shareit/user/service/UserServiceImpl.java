@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.core.exception.ConditionsNotMetException;
 import ru.practicum.shareit.core.exception.InternalServerException;
 import ru.practicum.shareit.core.exception.NotFoundException;
@@ -18,6 +19,7 @@ import ru.practicum.shareit.user.repository.UserRepository;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -28,6 +30,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto add(UserDto userDto) {
         User user = userRepository.save(userMapper.map(userDto));
         if (user.getId() == null) {
@@ -38,6 +41,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto update(UserUpdateDto userUpdateDto, Long userId) {
         log.info("UserServiceImpl/update args: {}, {}", userUpdateDto, userId);
         if (userId == null) {
@@ -53,6 +57,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void delete(Long userId) {
         userRepository.deleteById(userId);
     }
@@ -61,5 +66,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(
                 String.format("Пользователь с ид %s не найден", userId))
         );
+    }
+
+    @Override
+    public Boolean existsUser(Long userId) {
+        return userRepository.findById(userId).stream().findAny().isPresent();
     }
 }

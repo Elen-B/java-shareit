@@ -5,7 +5,7 @@ import ru.practicum.shareit.core.mapper.JsonNullableMapper;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.dto.UserDto;
 
 /**
  * Class with methods to map Item to ItemDto/ItemUpdateDto and ItemDto/ItemUpdateDto to Item
@@ -20,7 +20,7 @@ public interface ItemMapper {
     @Mapping(target = "owner", source = "user")
     @Mapping(target = "id", source = "entity.id")
     @Mapping(target = "name", source = "entity.name")
-    Item map(ItemDto entity, User user);
+    Item map(ItemDto entity, UserDto user);
 
     ItemDto map(Item entity);
 
