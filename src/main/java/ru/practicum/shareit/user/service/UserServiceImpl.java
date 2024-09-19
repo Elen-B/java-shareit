@@ -29,8 +29,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto add(UserDto userDto) {
-        User user = userRepository.add(userMapper.map(userDto)).orElseThrow(() -> new InternalServerException(
-                "Ошибка создания пользователя"));
+        User user = userRepository.save(userMapper.map(userDto));
+        if (user.getId() == null) {
+            throw new InternalServerException(
+                    "Ошибка создания пользователя");
+        }
         return userMapper.map(user);
     }
 
@@ -43,8 +46,7 @@ public class UserServiceImpl implements UserService {
         User oldUser = getUserById(userId);
         userMapper.update(userUpdateDto, userId, oldUser);
         log.info("UserServiceImpl/update map update: {}", oldUser);
-        User updUser = userRepository.update(oldUser).orElseThrow(() -> new InternalServerException(
-                "Ошибка обновления позиции"));
+        User updUser = userRepository.save(oldUser);
         log.info("UserServiceImpl/update result: {}", oldUser);
 
         return userMapper.map(updUser);
@@ -52,11 +54,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Long userId) {
-        userRepository.delete(userId);
+        userRepository.deleteById(userId);
     }
 
     private User getUserById(Long userId) {
-        return userRepository.getById(userId).orElseThrow(() -> new NotFoundException(
+        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(
                 String.format("Пользователь с ид %s не найден", userId))
         );
     }
