@@ -15,7 +15,7 @@ import java.io.Serializable;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookingResponseDto implements Serializable {
+public class BookingResponseDto {
     Long id;
     String start;
     String end;

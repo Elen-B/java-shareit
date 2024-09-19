@@ -27,6 +27,4 @@ public class ItemDto implements Serializable {
     @NotNull
     Boolean available;
     Long requestId;
-    DatesDto lastBooking;
-    DatesDto nextBooking;
 }
