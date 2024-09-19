@@ -2,7 +2,9 @@ package ru.practicum.shareit.booking.repository;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.BookingDates;
 import ru.practicum.shareit.booking.model.BookingStatus;
 
 import java.time.LocalDateTime;
@@ -29,4 +31,22 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     Collection<Booking> findBookingByStartDateBeforeAndEndDateAfterAndItem_OwnerId(LocalDateTime startDate, LocalDateTime endDate, Long ownerId, Sort sort);
 
     Collection<Booking> findBookingByStatusAndItem_OwnerId(BookingStatus status, Long ownerId, Sort sort);
+
+    @Query(" select new ru.practicum.shareit.booking.model.BookingDates(i.id, MAX(b.startDate), MAX(b.endDate)) " +
+            " from Booking b " +
+            " join b.item i " +
+            " join i.owner o " +
+            "where b.startDate < ?1 " +
+            "  and o.id = ?2 " +
+            "group by i.id")
+    Collection<BookingDates> lastBookings(LocalDateTime date, Long ownerId);
+
+    @Query(" select new ru.practicum.shareit.booking.model.BookingDates(i.id, MIN(b.startDate), MIN(b.endDate)) " +
+            " from Booking b " +
+            " join b.item i " +
+            " join i.owner o " +
+            "where b.startDate >= ?1 " +
+            "  and o.id = ?2 " +
+            "group by i.id")
+    Collection<BookingDates> nextBookings(LocalDateTime date, Long ownerId);
 }

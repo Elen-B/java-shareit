@@ -8,17 +8,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.io.Serializable;
-
-/**
- * Dto class for Item
- */
-
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemDto implements Serializable {
+public class ItemDatesDto {
     Long id;
     @NotBlank
     String name;

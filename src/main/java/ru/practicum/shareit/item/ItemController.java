@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.ItemDatesDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 import ru.practicum.shareit.item.service.ItemService;
@@ -25,7 +26,7 @@ public class ItemController {
     }
 
     @GetMapping
-    public Collection<ItemDto> getByOwnerId(@RequestHeader("X-Sharer-User-Id") Long userId) {
+    public Collection<ItemDatesDto> getByOwnerId(@RequestHeader("X-Sharer-User-Id") Long userId) {
         return itemService.getByOwnerId(userId);
     }
 

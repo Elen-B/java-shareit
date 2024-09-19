@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.service;
 
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.item.dto.ItemDatesDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 import ru.practicum.shareit.item.model.Item;
@@ -18,7 +19,7 @@ public interface ItemService {
 
     ItemDto getById(Long itemId);
 
-    Collection<ItemDto> getByOwnerId(Long ownerId);
+    Collection<ItemDatesDto> getByOwnerId(Long ownerId);
 
     Collection<ItemDto> search(String text);
 
