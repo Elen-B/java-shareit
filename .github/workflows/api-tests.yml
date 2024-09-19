@@ -2,6 +2,7 @@ name: ShareIt API Tests
 
 on:
   pull_request:
+  workflow_dispatch:
 
 jobs:
   build:
