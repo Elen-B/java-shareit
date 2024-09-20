@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.ToString;
@@ -20,7 +19,6 @@ public class Comment {
     @Column(name = "comment_id")
     Long id;
 
-    @NotBlank
     String text;
 
     @ManyToOne(fetch = FetchType.LAZY)
