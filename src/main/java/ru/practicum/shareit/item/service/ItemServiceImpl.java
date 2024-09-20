@@ -18,10 +18,11 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Implementation of ItemService that implement operations with items using ItemRepository
@@ -82,40 +83,36 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Collection<ItemDatesDto> getByOwnerId(Long ownerId) {
-        HashMap<Long, BookingDates> lastBookings = new HashMap<>();
-        for (BookingDates dates : bookingRepository.lastBookings(LocalDateTime.now(), ownerId)) {
-            lastBookings.put(dates.getItemId(), dates);
-        }
+        Map<Long, BookingDates> lastBookings = bookingRepository
+                .lastBookings(LocalDateTime.now(), ownerId)
+                .stream()
+                .collect(Collectors.toMap(BookingDates::getItemId, Function.identity()));
 
-        HashMap<Long, BookingDates> nextBookings = new HashMap<>();
-        for (BookingDates dates : bookingRepository.nextBookings(LocalDateTime.now(), ownerId)) {
-            nextBookings.put(dates.getItemId(), dates);
-        }
+        Map<Long, BookingDates> nextBookings = bookingRepository
+                .nextBookings(LocalDateTime.now(), ownerId)
+                .stream()
+                .collect(Collectors.toMap(BookingDates::getItemId, Function.identity()));
 
         Collection<Item> items = itemRepository.findByOwnerId(ownerId);
 
-        Collection<Comment> comments = commentRepository.findByItemIdIn(items.stream().map(Item::getId).collect(Collectors.toList()));
-        HashMap<Long, Collection<CommentResponseDto>> mapComments = new HashMap<>();
-        for (Item item: items) {
-            mapComments.put(item.getId(),
-                    comments.stream()
-                            .filter(comment -> Objects.equals(comment.getItem().getId(), item.getId()))
-                            .map(itemMapper::map)
-                            .collect(Collectors.toList()));
-        }
+        Map<Long, List<CommentResponseDto>> mapComments = commentRepository
+                .findByItemIdIn(items.stream().map(Item::getId).collect(toList()))
+                .stream()
+                .collect(Collectors.groupingBy(comment -> comment.getItem().getId(),
+                        Collectors.mapping(itemMapper::map, toList())));
 
         return items.stream().map(item -> itemMapper.map(
                         item,
                         itemMapper.map(lastBookings.get(item.getId())),
                         itemMapper.map(nextBookings.get(item.getId())),
                         mapComments.get(item.getId())))
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     @Override
     public Collection<ItemDto> search(String text) {
         Collection<Item> items = itemRepository.search(text);
-        return items.stream().map(itemMapper::map).collect(Collectors.toList());
+        return items.stream().map(itemMapper::map).collect(toList());
     }
 
     @Override
