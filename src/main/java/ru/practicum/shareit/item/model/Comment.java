@@ -1,9 +1,7 @@
 package ru.practicum.shareit.item.model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.user.model.User;
 
@@ -11,7 +9,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "comments")
-@Data
+@Getter
+@Setter
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Comment {
     @Id
@@ -33,4 +33,16 @@ public class Comment {
 
     @Column(name = "create_date")
     private LocalDateTime createDate;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Comment)) return false;
+        return id != null && id.equals(((Comment) o).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

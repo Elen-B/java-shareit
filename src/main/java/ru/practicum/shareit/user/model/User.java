@@ -1,8 +1,7 @@
 package ru.practicum.shareit.user.model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 /**
@@ -11,7 +10,9 @@ import lombok.experimental.FieldDefaults;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
     @Id
@@ -20,4 +21,16 @@ public class User {
     Long id;
     String name;
     String email;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        return id != null && id.equals(((User) o).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

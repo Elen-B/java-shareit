@@ -1,9 +1,7 @@
 package ru.practicum.shareit.item.model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.user.model.User;
 
@@ -13,7 +11,9 @@ import ru.practicum.shareit.user.model.User;
 
 @Entity
 @Table(name = "items")
-@Data
+@Getter
+@Setter
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Item {
     @Id
@@ -29,4 +29,16 @@ public class Item {
     User owner;
     @Column(name = "request_id")
     Long requestId;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Item)) return false;
+        return id != null && id.equals(((Item) o).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

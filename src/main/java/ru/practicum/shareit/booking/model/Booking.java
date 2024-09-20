@@ -1,9 +1,7 @@
 package ru.practicum.shareit.booking.model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
@@ -16,7 +14,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "bookings")
-@Data
+@Getter
+@Setter
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Booking {
     @Id
@@ -42,4 +42,16 @@ public class Booking {
 
     @Enumerated(EnumType.STRING)
     BookingStatus status = BookingStatus.WAITING;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Booking)) return false;
+        return id != null && id.equals(((Booking) o).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
