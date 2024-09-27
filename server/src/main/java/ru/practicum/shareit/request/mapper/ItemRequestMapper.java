@@ -27,7 +27,7 @@ public interface ItemRequestMapper {
     @Mapping(target = "id", ignore = true)
     ItemRequest map(ItemRequestDto itemRequestDto, UserDto requestor, LocalDateTime date);
 
-    @Mapping(target = "requestor_id", source = "entity.requestor.id")
+    @Mapping(target = "requestorId", source = "entity.requestor.id")
     @Mapping(target = "created", source = "entity.createdDate")
     ItemRequestResponseDto map(ItemRequest entity, List<ItemOwnerDto> items);
 }

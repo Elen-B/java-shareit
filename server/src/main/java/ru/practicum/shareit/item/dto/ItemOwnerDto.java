@@ -14,5 +14,5 @@ import lombok.experimental.FieldDefaults;
 public class ItemOwnerDto {
     Long id;
     String name;
-    Long owner_id;
+    Long ownerId;
 }

@@ -26,11 +26,12 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ItemRequestServiceImpl implements ItemRequestService{
+public class ItemRequestServiceImpl implements ItemRequestService {
     private final ItemRequestRepository itemRequestRepository;
     private final ItemRequestMapper itemRequestMapper;
     private final UserService userService;
     private final ItemService itemService;
+
     @Override
     @Transactional
     public ItemRequestResponseDto add(ItemRequestDto itemRequestDto, Long userId) {

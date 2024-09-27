@@ -17,7 +17,7 @@ public class ItemRequestResponseDto {
     Long id;
     String description;
     String created;
-    Long requestor_id;
+    Long requestorId;
     List<ItemOwnerDto> items;
 
 }
