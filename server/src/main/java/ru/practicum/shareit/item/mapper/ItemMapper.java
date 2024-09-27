@@ -35,6 +35,10 @@ public interface ItemMapper {
     ItemDto map(Item entity);
 
     @Mapping(target = "id", source = "entity.id")
+    @Mapping(target = "owner_id", source = "entity.owner.id")
+    ItemOwnerDto mapToItemOwnerDto(Item entity);
+
+    @Mapping(target = "id", source = "entity.id")
     ItemDatesDto map(Item entity, DatesDto lastBooking, DatesDto nextBooking, Collection<CommentResponseDto> comments);
 
     DatesDto map(BookingDates dates);

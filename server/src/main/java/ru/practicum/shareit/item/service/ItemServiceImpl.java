@@ -125,11 +125,29 @@ public class ItemServiceImpl implements ItemService {
     public CommentResponseDto addComment(Long itemId, Long authorId, CommentRequestDto commentDto) {
         ItemDto item = getById(itemId);
         UserDto author = userService.getById(authorId);
+        log.info("LocalDateTime.now() = " + LocalDateTime.now());
         if (bookingRepository.findByItemIdAndBookerIdAndEndDateBeforeAndStatus(itemId, authorId, LocalDateTime.now(), BookingStatus.APPROVED).isEmpty()) {
             throw new WrongArgumentException("Не найдено успешное бронирование позиции");
         }
 
         Comment comment = commentRepository.save(itemMapper.map(commentDto, item, author, LocalDateTime.now()));
         return itemMapper.map(comment);
+    }
+
+    @Override
+    public Collection<ItemOwnerDto> getByRequestId(Long requestId) {
+        return itemRepository.findByRequestId(requestId)
+                .stream()
+                .map(itemMapper::mapToItemOwnerDto)
+                .collect(toList());
+    }
+
+    @Override
+    public Map<Long, List<ItemOwnerDto>> getByRequestIds(Collection<Long> requestIds) {
+        return itemRepository
+                .findByRequestIdIn(requestIds.stream().toList())
+                .stream()
+                .collect(Collectors.groupingBy(Item::getRequestId,
+                        Collectors.mapping(itemMapper::mapToItemOwnerDto, toList())));
     }
 }
