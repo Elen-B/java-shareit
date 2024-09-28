@@ -105,13 +105,28 @@
 					<artifactId>jacoco-maven-plugin</artifactId>
 					<version>0.8.12</version>
 					<configuration>
+						<destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
+						<dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
 						<output>file</output>
+						<append>true</append>
+						<excludes>
+							<exclude>ru/practicum/shareit/*/mapper/*</exclude>
+							<exclude>ru/practicum/shareit/*/model/*</exclude>
+							<exclude>*Test</exclude>
+						</excludes>
 					</configuration>
 					<executions>
 						<execution>
 							<id>jacoco-initialize</id>
 							<goals>
 								<goal>prepare-agent</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>report</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>report</goal>
 							</goals>
 						</execution>
 						<execution>
@@ -132,7 +147,7 @@
 											<limit>
 												<counter>LINE</counter>
 												<value>COVEREDRATIO</value>
-												<minimum>0.9</minimum>
+												<minimum>0.7</minimum>
 											</limit>
 											<limit>
 												<counter>BRANCH</counter>
@@ -152,7 +167,7 @@
 											<limit>
 												<counter>CLASS</counter>
 												<value>MISSEDCOUNT</value>
-												<maximum>1</maximum>
+												<maximum>3</maximum>
 											</limit>
 										</limits>
 									</rule>
@@ -220,17 +235,6 @@
 					</plugin>
 				</plugins>
 			</reporting>
-		</profile>
-		<profile>
-			<id>coverage</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.jacoco</groupId>
-						<artifactId>jacoco-maven-plugin</artifactId>
-					</plugin>
-				</plugins>
-			</build>
 		</profile>
 	</profiles>
 

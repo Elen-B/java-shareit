@@ -51,7 +51,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public Collection<ItemRequestResponseDto> getByRequestorId(Long requestorId) {
-        Collection<ItemRequest> requests = itemRequestRepository.findByRequestorId(requestorId, Sort.by("createdDate"));
+        Collection<ItemRequest> requests = itemRequestRepository.findByRequestorId(requestorId, Sort.by("createdDate").descending());
         Map<Long, List<ItemOwnerDto>> mapItems = itemService.getByRequestIds(requests.stream().map(ItemRequest::getId).toList());
 
         return requests.stream()
