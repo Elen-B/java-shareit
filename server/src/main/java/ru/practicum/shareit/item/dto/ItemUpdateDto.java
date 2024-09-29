@@ -1,7 +1,5 @@
 package ru.practicum.shareit.item.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,10 +16,10 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class ItemUpdateDto implements Serializable {
 
-    JsonNullable<@NotBlank String> name = JsonNullable.undefined();
+    JsonNullable<String> name = JsonNullable.undefined();
 
-    JsonNullable<@NotBlank String> description = JsonNullable.undefined();
+    JsonNullable<String> description = JsonNullable.undefined();
 
-    JsonNullable<@NotNull Boolean> available = JsonNullable.undefined();
+    JsonNullable<Boolean> available = JsonNullable.undefined();
 
 }
